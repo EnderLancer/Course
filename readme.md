@@ -1,9 +1,8 @@
 # Chapter References: #
-    * Task 1
-        1. [Part 1](#part-1)
-        2. [Part 2](#part-2)
+* Task 1
+    1. [Part 1](#part-1)
+    2. [Part 2](#part-2)
 
-\
 \
 
 ## Part 1 #
