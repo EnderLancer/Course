@@ -3,7 +3,6 @@
     1. [Part 1](#part-1)
     2. [Part 2](#part-2)
 
-\
 
 ## Part 1 #
 1. Log in to the system as root.
@@ -133,3 +132,126 @@
     ```
 
 ## Part 2 #
+1. Log in to the system as root.
+    Show all files that starts with 'c' or contain 'sk' in name.
+    ```
+    student@CsnKhai:~$ tree -P 'c*|*sk*'
+    .
+    ├── test
+    └── Work
+        └── Course
+            └── Linux Base
+                └── Task1
+                    ├── task1part1.sh
+                    └── task1part2.sh
+    
+    5 directories, 2 files
+    ```
+    List subdirectories of the root directory up to and including the second nesting level.
+    ```
+    student@CsnKhai:~$ tree -P 'c*|*sk*' -L 2
+    .
+    ├── test
+    └── Work
+        └── Course
+    
+    3 directories, 0 files
+    ```
+    
+2. Determine the type of file.
+    ```
+    student@CsnKhai:~/Work/Course/Linux Base$ file readme.md
+    readme.md: UTF-8 Unicode text, with CRLF line terminators
+    ```
+    
+3. Navigation.
+    `cd` - command for navigation. 
+    `cd /` - navigate to root (absolute).
+    `cd ~` - navigate to home.
+    `cd ..` - navigate to previous derictory.
+    
+    ```
+    student@CsnKhai:~/Work/Course/Linux Base/Task1$ cd ~
+    student@CsnKhai:~$ cd ../../etc/
+    student@CsnKhai:/etc$ 
+    ```
+4. The ls command.
+    Let's print all files and directories without ignore files starting with "." (-a),
+    full info, but without group column (-o) (like -l, but without groups),
+    with slash at the end of derictory (-p).
+    ```
+    student@CsnKhai:~$ ls -oap
+    total 60
+    drwxr-xr-x 6 student 4096 Aug  4 01:22 ./
+    drwxr-xr-x 3 root    4096 Sep 15  2015 ../
+    -rw------- 1 student  391 Aug  3 09:12 .bash_history
+    -rw-r--r-- 1 student  220 Sep 15  2015 .bash_logout
+    -rw-r--r-- 1 student 3637 Sep 15  2015 .bashrc
+    drwx------ 2 student 4096 Sep 15  2015 .cache/
+    -rw-rw-r-- 1 student   49 Aug  3 23:03 .gitconfig
+    -rw-rw-r-- 1 student   17 Aug  3 22:33 .plan
+    -rw-r--r-- 1 student  675 Sep 15  2015 .profile
+    drwx------ 2 student 4096 Aug  2 14:41 .ssh/
+    drwxrwxr-x 2 student 4096 Aug  2 12:55 test/
+    -rw------- 1 student 5805 Aug  3 21:22 .viminfo
+    drwxrwxr-x 3 student 4096 Aug  3 07:45 Work/
+    -rw------- 1 student  212 Aug  4 01:22 .Xauthority
+    ```
+5. Sequence of operations.
+    
+    ```
+    student@CsnKhai:~$ mkdir for_fifth_task
+    student@CsnKhai:~$ ls -od /*/ > for_fifth_task/root_d_info.txt
+    student@CsnKhai:~$ less for_fifth_task/root_d_info.txt
+    student@CsnKhai:~$ cp for_fifth_task/root_d_info.txt relative_copy.txt
+    student@CsnKhai:~$ cp ~/for_fifth_task/root_d_info.txt absolute_copy.txt
+    student@CsnKhai:~$ ls -d *copy*
+    absolute_copy.txt  relative_copy.txt
+    student@CsnKhai:~$ rm -rf for_fifth_task
+    student@CsnKhai:~$ ls
+    absolute_copy.txt  relative_copy.txt  test  Work
+    student@CsnKhai:~$ rm absolute_copy.txt relative_copy.txt
+    student@CsnKhai:~$ ls
+    test  Work
+    ```
+    
+6. Sequence of operations. Links.
+    
+    - `student@CsnKhai:~$ mkdir test`
+    - `student@CsnKhai:~$ cp .bash_history test/labwork2`
+    - ```
+      student@CsnKhai:~$ ln test/labwork2 test/hard_ln  
+      student@CsnKhai:~$ ln -s test/labwork2 test/soft_ln
+      ```
+    - The differance: hard link - like second name, symbolic link - reference to file/directory  
+      ```
+      student@CsnKhai:~$ ls -od test/*ln
+      -rw------- 2 student 399 Aug  4 02:56 test/hard_ln
+      lrwxrwxrwx 1 student   8 Aug  4 02:55 test/soft_ln -> labwork2
+      ```
+    - Append file with word "changes" in new line by symbolic link to data file  
+    `student@CsnKhai:~$ echo "changes" >> test/soft_ln`  
+    - `student@CsnKhai:~$ mv test/hard_ln test/hard_lnk_labwork2`  
+    - `student@CsnKhai:~$ mv test/soft_ln test/soft_lnk_labwork2`  
+    - `student@CsnKhai:~$ rm -rf test`  
+    After all (if links wasn't in test directory wich was deleted), hard link would works normally, but symbolic link reference to non-existing file.  
+    
+7. Using the locate utility.
+    
+
+8. Determine the type of file.
+
+9. Determine the type of file.
+
+
+10. Determine the type of file.
+
+11. Determine the type of file.
+
+12. Determine the type of file.
+
+13. Determine the type of file.
+
+14. Determine the type of file.
+
+15. Determine the type of file.
