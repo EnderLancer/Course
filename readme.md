@@ -237,15 +237,83 @@
     After all (if links wasn't in test directory wich was deleted), hard link would works normally, but symbolic link reference to non-existing file.  
     
 7. Using the locate utility.
+    With command "locate" find files with "sqid" and "traceroute":
+    ```
+    student@CsnKhai:~$ locate sqid
+    student@CsnKhai:~$ locate traceroute
+    /etc/alternatives/traceroute6
+    /etc/alternatives/traceroute6.8.gz
+    /lib/modules/3.13.0-63-generic/kernel/drivers/tty/n_tracerouter.ko
+    /usr/bin/traceroute6
+    /usr/bin/traceroute6.iputils
+    /usr/share/man/man8/traceroute6.8.gz
+    /usr/share/man/man8/traceroute6.iputils.8.gz
+    /var/lib/dpkg/alternatives/traceroute6
+    ```
+
+8. Determine partitions wich mounted in the system.
+
+    ```
+    student@CsnKhai:~$ findmnt
+    TARGET                       SOURCE                            FSTYPE   OPTIONS
+    /                            /dev/disk/by-uuid/ee9b6c41-7517-488b-829c-3075795a3 524
+                                                                   ext4     rw,relat
+    ├─/sys                       sysfs                             sysfs    rw,nosui
+    │ ├─/sys/fs/cgroup                                             tmpfs    rw,relat
+    │ │ └─/sys/fs/cgroup/systemd systemd                           cgroup   rw,nosui
+    │ ├─/sys/fs/fuse/connections                                   fusectl  rw,relat
+    │ ├─/sys/kernel/debug                                          debugfs  rw,relat
+    │ ├─/sys/kernel/security                                       security rw,relat
+    │ └─/sys/fs/pstore                                             pstore   rw,relat
+    ├─/proc                      proc                              proc     rw,nosui
+    ├─/dev                       udev                              devtmpfs rw,relat
+    │ └─/dev/pts                 devpts                            devpts   rw,nosui
+    └─/run                       tmpfs                             tmpfs    rw,nosui
+      ├─/run/lock                                                  tmpfs    rw,nosui
+      ├─/run/shm                                                   tmpfs    rw,nosui
+      └─/run/user                                                  tmpfs    rw,nosui
+    ```
+9. Count the number of lines containing a given sequence of characters.
+    For count lines with a given sequence of characters, use `grep` (for finding lines with matching sequence) and `wc -l` (for count lines).
+    ```
+    student@CsnKhai:~/Work/Course/Linux Base$ grep 'ch' Task1/task1part2.sh
+    echo "1) you already login, isn't you?"
+    echo "2) change password by `passwd` command"
+    echo "3) check all users registered now"
+    echo "4) change home phone number and office room"
+    chfn -h 88005553535
+    chfn -r 144
+    echo "5) use couple of commands for help system"
+    echo "(search by keyword `append`)"
+    echo "(short description of command `man`)"
+    echo "6) Explore the more and less commands using the help system. (I don't want to pollute your console, so nothing to execute)"
+    echo "7) add plan for user"
+    echo "Work hard on LR1" > .plan
+    echo "8) show all user files"
+    student@CsnKhai:~/Work/Course/Linux Base$ grep 'ch' Task1/task1part2.sh | wc -l  13
+    ```
+
+10. Find all files in the /etc directory containing the host character sequence.
+    Use `find /etc/ -name "\*host\*"` for finding files with name \*host\*.
+    ```
+    student@CsnKhai:~/Work/Course/Linux Base$ sudo find /etc/ -name "*host*"
+    /etc/hosts
+    /etc/hosts.allow
+    /etc/ssh/ssh_host_ed25519_key.pub
+    /etc/ssh/ssh_host_ecdsa_key.pub
+    /etc/ssh/ssh_host_rsa_key
+    /etc/ssh/ssh_host_rsa_key.pub
+    /etc/ssh/ssh_host_ecdsa_key
+    /etc/ssh/ssh_host_dsa_key.pub
+    /etc/ssh/ssh_host_dsa_key
+    /etc/ssh/ssh_host_ed25519_key
+    /etc/init/hostname.conf
+    /etc/hostname
+    /etc/hosts.deny
+    /etc/host.conf
+    /etc/dbus-1/system.d/org.freedesktop.hostname1.conf
+    ```
     
-
-8. Determine the type of file.
-
-9. Determine the type of file.
-
-
-10. Determine the type of file.
-
 11. Determine the type of file.
 
 12. Determine the type of file.
