@@ -980,11 +980,14 @@
     ```
 
 4. Implement port forwarding for the SSH client.
-    ![NAT Port Forwarding Menu](imgs/NAT_Port_Forwarding.png)
+    ![NAT Port Forwarding Menu](imgs/NAT_Port_Forwarding.png)  
+    
     And now we can access by host ip:port to ssh and guest ip:port is free from host (host don't know about it).
 
 5. Intercept (capture) traffic.
-    ![Wireshark Capture Menu](imgs/wireshark.png)
+    ![Wireshark Capture Menu](imgs/wireshark.png)  
+    
+    This is what ssh encrypted text looks like.
 
 
 ## **Task Networking** #
