@@ -954,7 +954,7 @@
     |     ..          |
     +-----------------+
     ```
-    And use 'RSA1` algorithm, but for 4096 bytes.
+    And use `RSA1` algorithm, but for 4096 bytes.
     ```
     student@CsnKhai:~$ ssh-keygen -t rsa1 -b 4096
     Generating public/private rsa1 key pair.
@@ -977,7 +977,7 @@
     |              .oo|
     |             ...o|
     +-----------------+
-    ```
+    ```  
 
 4. Implement port forwarding for the SSH client.
     ![NAT Port Forwarding Menu](imgs/NAT_Port_Forwarding.png)  
@@ -992,26 +992,102 @@
 
 ## **Task Networking** #
 ### I'll fill out a description of this task in `readme.md` till Sanday. #
-1. 
-    ~
+1.  Create virtual machines connection according to figure 1.
+    ![VMs' connection](imgs/configure.png)  
+
+    So, we get VM2 connected with VM1 by `internal network`, and VM1 have access to the Internet.
     
-2. 
-    ~
+2.  Configure all network interfaces in order to make VM2 has an access to the Internet
     
-3.
-    ~
+    With `iptables` we write a route tables with forwarding. VM2:
+    ```
+    student@CsnKhai:~$ sudo iptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE
+    student@CsnKhai:~$ sudo iptables -S
+    -P INPUT ACCEPT
+    -P FORWARD ACCEPT
+    -P OUTPUT ACCEPT
+    student@CsnKhai:~$ sudo iptables -A FORWARD -i eth1 -o eth0 -j ACCEPT
+    student@CsnKhai:~$ sudo iptables -A FORWARD -i eth0 -o eth1 -m state --state RELATED,ESTABLISHED -j ACCEPT
+    student@CsnKhai:~$ sudo iptables -S
+    -P INPUT ACCEPT
+    -P FORWARD ACCEPT
+    -P OUTPUT ACCEPT
+    -A FORWARD -i eth1 -o eth0 -j ACCEPT
+    -A FORWARD -i eth0 -o eth1 -m state --state RELATED,ESTABLISHED -j ACCEPT
+    student@CsnKhai:~$ sudo echo 1 > /proc/sys/net/ipv4/ip_forward
+    ```
+    
+3. Check the route from VM2 to Host.
+    After commands in 2 exercise we can check connection from VM2 to Internet through VM1, VM2:
+    `student@CsnKhai:~$ ping 10.10.10.1`
+    ![Ping host](imgs/ping_Host.png)
 
-4. 
-    ~
+4. Check the access to the Internet
+    After commands in 2 exercise we can check connection from VM2 to Internet through VM1, VM2:
+    `student@CsnKhai:~$ ping 8.8.8.8`
+    ![Ping 8.8.8.8](imgs/ping8888.png)
 
-5.
-    ~
+5. Determine, which resource has an IP address 8.8.8.8.
+    ```
+    student@CsnKhai:~/Work/Course/Linux Base/Course$ dig @8.8.8.8 +short NS domain.com
+    ns-1250.awsdns-28.org.
+    ns-166.awsdns-20.com.
+    ns-2022.awsdns-60.co.uk.
+    ns-683.awsdns-21.net.
+    ```
 
-6.
-    ~
+6. Determine, which IP address belongs to resource epam.com
+    ```
+    student@CsnKhai:~/Work/Course/Linux Base/Course$ dig epam.com
 
-7.
-    ~
+    ; <<>> DiG 9.9.5-3ubuntu0.5-Ubuntu <<>> epam.com
+    ;; global options: +cmd
+    ;; Got answer:
+    ;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 768
+    ;; flags: qr rd ra ad; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 0
 
-8.
-    ~
+    ;; QUESTION SECTION:
+    ;epam.com.                      IN      A
+
+    ;; ANSWER SECTION:
+    epam.com.               2757    IN      A       3.214.134.159
+
+    ;; Query time: 4 msec
+    ;; SERVER: 127.0.0.1#53(127.0.0.1)
+    ;; WHEN: Sun Aug 08 12:41:13 UTC 2021
+    ;; MSG SIZE  rcvd: 42
+    ```
+
+7. Determine the default gateway for your HOST and display routing table.
+    The default gateway for my computer is `192.168.0.1`. Geting by `route PRINT` command in `CMD`.
+    ```
+    IPv4 таблица маршрута
+    ===========================================================================
+    Активные маршруты:
+    Сетевой адрес           Маска сети      Адрес шлюза       Интерфейс  Метрика
+              0.0.0.0          0.0.0.0      **192.168.0.1**     192.168.0.52     40
+            127.0.0.0        255.0.0.0         On-link         127.0.0.1    331
+            127.0.0.1  255.255.255.255         On-link         127.0.0.1    331
+      127.255.255.255  255.255.255.255         On-link         127.0.0.1    331
+    ```
+
+8. Trace the route to google.com
+    Needs to use `-I` key for successful work.
+    ```
+    student@CsnKhai:~/Work/Course/Linux Base/Course$ sudo traceroute -I google.com
+    traceroute to google.com (142.250.180.206), 30 hops max, 60 byte packets
+     1  10.0.2.2 (10.0.2.2)  0.099 ms  0.087 ms  0.079 ms
+     2  dlinkrouter.Dlink (192.168.0.1)  4.223 ms  4.110 ms  4.095 ms
+     3  10.134.0.22 (10.134.0.22)  12.829 ms  15.141 ms  15.144 ms
+     4  vgw2-vipas.te.net.ua (195.138.70.193)  27.359 ms  29.261 ms  29.180 ms
+     5  odin-vgw2.te.net.ua (172.20.24.238)  14.992 ms  14.986 ms  14.980 ms
+     6  br4-dca-to-core4-dca.te.net.ua (195.138.67.21)  14.974 ms  14.431 ms  14.362 ms
+     7  195.138.70.137 (195.138.70.137)  19.055 ms  19.006 ms  18.825 ms
+     8  108.170.248.130 (108.170.248.130)  18.440 ms  18.048 ms  19.768 ms
+     9  142.250.228.86 (142.250.228.86)  30.314 ms  31.658 ms  31.652 ms
+    10  172.253.51.91 (172.253.51.91)  33.167 ms  33.163 ms  33.155 ms
+    11  74.125.242.241 (74.125.242.241)  36.934 ms  35.483 ms  33.064 ms
+    12  142.251.65.227 (142.251.65.227)  31.438 ms  29.151 ms  26.496 ms
+    13  bud02s33-in-f14.1e100.net (142.250.180.206)  26.354 ms  27.119 ms  26.982 ms
+    ```
+    We get IP `142.250.180.206` and in `dig google.com` we get the same IP address.
