@@ -1,0 +1,69 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %} Book list Page {% endblock %}
+
+{% block content %}
+    <img src="{{ book.picture_src }}" width="207" height="210" class="floated" />
+    <h2><span>{{ book.name|upper }}</span></h2>
+    <p>{{ book.description }}</p>
+    <b><p>
+        {% if book.authors.count > 1 %}
+            Authors:
+            {% for author in book.authors.all %}
+                {{ author.full_name }}<br>
+            {% endfor %}
+        {% else %}
+            Author: {{ book.authors.first }}
+        {% endif %}
+    </p></b>
+    <p>Writed: {{ book.writing_date|date:"c" }}</p>
+    <br>
+    <p>Publicated on site: {{ book.publication_date|date:"c" }}</p>
+    {% if review %}
+        <h3>Review on book by {{ review.author.username }}</h3>
+        <p>{{ review.text }}</p>
+        <span>{{ review.publication_date }}</span>
+        <h4>Comments to review:</h4>
+        <div class="coment-bottom bg-white p-2 px-4">
+            {% for comment in comments %}
+                <div class="commented-section mt-2" id="comment{{ comment.pk }}">
+                    <div class="d-flex flex-row align-items-center commented-user">
+                        <h5 class="mr-2">{{ comment.author.username }} </h5><span class="dot mb-1"></span><span class="mb-1 ml-2"> {{ comment.publication_date }}</span>
+                        {% if comment.answer_on %}
+                            <p class="card">
+                                answer <a class="anchorjs-link " href="#comment{{ comment.answer_on.pk }}" aria-label="Anchor" style="padding-left: 0.375em;">on</a>: {{ comment.answer_on.author.username }}
+                            </p>
+                        {% endif %}
+                    </div>
+                    <div class="comment-text-sm"><span>{{ comment.text | linebreaks }}</span></div>
+                    <div class="reply-section">
+                        <p>
+                          <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#ReplyBox{{ comment.pk }}" aria-expanded="false" aria-controls="ReplyBox{{ comment.pk }}">
+                            Reply
+                          </button>
+                        </p>
+                        <div class="collapse" id="ReplyBox{{ comment.pk }}">
+                          <div class="card card-body">
+                            <form method="post" action="{% url 'book' pk=book.id %}">
+                                {% csrf_token %}
+                                {{ form.message.errors }}
+                                {{ form.as_p }}
+                                <input type="hidden" name="reply_pk" value="{{ comment.pk }}">
+                                <input type="submit" value="Submit">
+                            </form>
+                          </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <form method="post" action="{% url 'book' pk=book.id %}">
+            {% csrf_token %}
+            {{ request.urlencode.answer }}
+            {{ form.as_p }}
+            <input type="hidden" name="reply_pk" value="">
+            <input type="submit" value="Submit">
+        </form>
+    {% endif %}
+{% endblock %}

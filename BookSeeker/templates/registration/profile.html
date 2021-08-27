@@ -1,0 +1,11 @@
+{% extends 'main/base.html' %}
+{% load static %}
+
+{% block title %} {{ username }} profile {% endblock %}
+
+{% block content %}
+
+<p>Hello {{ user.username }}, this is your profile.</p>
+<p><a href="{% url 'password_reset' %}">Want to reset password?</a></p>
+
+{% endblock %}

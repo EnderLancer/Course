@@ -1,0 +1,36 @@
+{% extends 'main/base.html' %}
+{% load static %}
+{% load bookfinder_extras %}
+{% block title %} Book list Page {% endblock %}
+
+{% block content %}
+    <div class="body">
+        <div class="body_resize">
+            {% for book in page_obj %}
+                <div class="card mb-2">
+                    <img src="{{ book.picture_src }}" alt="Picture not available" width="207" height="210" class="floated" />
+                    <h2><span>{{ book.name|upper }}</span></h2>
+                    <p>{{ book.description|safe }}</p>
+                    <a class="mb-2" href="{% url 'book' pk=book.id %}"><img src="{% static 'bookfinder/images/reading.gif' %}" alt="" width="118" height="26" border="0" /></a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="footer pagination">
+        <span class="step-links">
+            {% if page_obj.has_previous %}
+                <a href="?{% url_replace page=1 %}">&laquo; first</a>
+                <a href="?{% url_replace page=page_obj.previous_page_number %}">previous</a>
+            {% endif %}
+
+            <span class="current">
+                Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}.
+            </span>
+
+            {% if page_obj.has_next %}
+                <a href="?{% url_replace page=page_obj.next_page_number %}">next</a>
+                <a href="?{% url_replace page=page_obj.paginator.num_pages %}">last &raquo;</a>
+            {% endif %}
+        </span>
+    </div>
+{% endblock %}
