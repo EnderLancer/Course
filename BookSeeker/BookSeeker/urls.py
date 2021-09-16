@@ -19,15 +19,21 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path, include
 from django.views.generic import TemplateView
+from rest_framework.routers import SimpleRouter
 
-from bookfinder.views import UserRegisterView
+from bookfinder.views import BookViewSet, AuthorViewSet, GenreViewSet
+
+router = SimpleRouter()
+router.register(r'api/books', BookViewSet)
+router.register(r'api/authors', AuthorViewSet)
+router.register(r'api/genres', GenreViewSet)
 
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
-    path('accounts/', include('django.contrib.auth.urls')),
-    path('accounts/profile/', TemplateView.as_view(template_name='registration/profile.html'), name='profile'),
-    path('accounts/register/', UserRegisterView.as_view(), name='register'),
+    path('account/', include('account.urls')),
     path('', TemplateView.as_view(template_name='home.html'), name='home'),
     path('books/', include('bookfinder.urls')),
     path('__debug__/', include(debug_toolbar.urls)),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+
+urlpatterns += router.urls

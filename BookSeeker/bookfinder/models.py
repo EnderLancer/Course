@@ -35,7 +35,7 @@ class BookReview(models.Model):
     book = models.OneToOneField(Book, on_delete=models.CASCADE, related_name='review')
     author = models.ForeignKey(User, on_delete=models.SET_NULL, null=True)
     text = models.TextField(max_length=1023)
-    publication_date = models.DateField()
+    publication_date = models.DateField(default=timezone.now)
 
     def __str__(self):
         return f'Review on {self.book.name} by {self.author.username}'

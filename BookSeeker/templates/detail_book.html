@@ -6,7 +6,7 @@
 {% block content %}
     <img src="{{ book.picture_src }}" width="207" height="210" class="floated" />
     <h2><span>{{ book.name|upper }}</span></h2>
-    <p>{{ book.description }}</p>
+    <p>{{ book.description|safe }}</p>
     <b><p>
         {% if book.authors.count > 1 %}
             Authors:
@@ -32,20 +32,22 @@
                         <h5 class="mr-2">{{ comment.author.username }} </h5><span class="dot mb-1"></span><span class="mb-1 ml-2"> {{ comment.publication_date }}</span>
                         {% if comment.answer_on %}
                             <p class="card">
-                                answer <a class="anchorjs-link " href="#comment{{ comment.answer_on.pk }}" aria-label="Anchor" style="padding-left: 0.375em;">on</a>: {{ comment.answer_on.author.username }}
+                                reply on: <a class="anchorjs-link " href="#comment{{ comment.answer_on.pk }}" aria-label="Anchor" style="padding-left: 0.375em;">{{ comment.answer_on.author.username }}</a>
                             </p>
                         {% endif %}
                     </div>
                     <div class="comment-text-sm"><span>{{ comment.text | linebreaks }}</span></div>
                     <div class="reply-section">
                         <p>
+                            {% if user.is_authenticated %}
                           <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#ReplyBox{{ comment.pk }}" aria-expanded="false" aria-controls="ReplyBox{{ comment.pk }}">
                             Reply
                           </button>
+                            {% endif %}
                         </p>
                         <div class="collapse" id="ReplyBox{{ comment.pk }}">
                           <div class="card card-body">
-                            <form method="post" action="{% url 'book' pk=book.id %}">
+                            <form method="post" action="{% url 'book-detail' pk=book.id %}">
                                 {% csrf_token %}
                                 {{ form.message.errors }}
                                 {{ form.as_p }}
@@ -58,12 +60,22 @@
                 </div>
             {% endfor %}
         </div>
-        <form method="post" action="{% url 'book' pk=book.id %}">
+        {% if user.is_authenticated %}
+        <form method="post" action="{% url 'book-detail' pk=book.id %}">
             {% csrf_token %}
             {{ request.urlencode.answer }}
             {{ form.as_p }}
             <input type="hidden" name="reply_pk" value="">
             <input type="submit" value="Submit">
         </form>
+        {% endif %}
+    {% else %}
+        {% if perms.bookfinder.add_bookreview %}
+            <form method="post" action="{% url 'book-detail' pk=book.id %}">
+                {% csrf_token %}
+                {{ review_form }}
+            <input type="submit" value="Submit">
+        </form>
+        {% endif %}
     {% endif %}
 {% endblock %}

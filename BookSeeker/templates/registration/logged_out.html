@@ -1,13 +1,13 @@
 {% extends 'main/base.html' %}
 {% load static %}
 
-{% block title %} Book list Page {% endblock %}
+{% block title %} Loged out {% endblock %}
 
 {% block content %}
 {% if form.errors %}
   <p class="err">Your username and password didn't match. Please try again.</p>
 {% endif %}
-
+You logged out!
 {% if next %}
   {% if user.is_authenticated %}
     <p>Your account doesn't have access to this page. To proceed,

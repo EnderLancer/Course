@@ -39,6 +39,7 @@ INSTALLED_APPS = [
     'django.contrib.staticfiles',
     'debug_toolbar',
     'bookfinder.apps.BookfinderConfig',
+    'rest_framework',
 ]
 
 MIDDLEWARE = [
@@ -89,6 +90,14 @@ DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': BASE_DIR / 'db.sqlite3',
+    },
+    'defaulddt': {
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'auth',
+        'USER': 'django_auth',
+        'PASSWORD': 'asdfgh',
+        'HOST': 'localhost',
+        'PORT': '',
     }
 }
 
@@ -139,3 +148,12 @@ STATICFILES_DIRS = [
 # https://docs.djangoproject.com/en/3.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    'DEFAULT_RENDERER_CLASSES': (
+        'rest_framework.renderers.JSONRenderer',
+    ),
+    'DEFAULT_PARSER_CLASSES': (
+        'rest_framework.parsers.JSONParser',
+    ),
+}

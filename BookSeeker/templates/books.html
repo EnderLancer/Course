@@ -11,7 +11,7 @@
                     <img src="{{ book.picture_src }}" alt="Picture not available" width="207" height="210" class="floated" />
                     <h2><span>{{ book.name|upper }}</span></h2>
                     <p>{{ book.description|safe }}</p>
-                    <a class="mb-2" href="{% url 'book' pk=book.id %}"><img src="{% static 'bookfinder/images/reading.gif' %}" alt="" width="118" height="26" border="0" /></a>
+                    <a class="mb-2" href="{% url 'book-detail' pk=book.id %}"><img src="{% static 'bookfinder/images/reading.gif' %}" alt="" width="118" height="26" border="0" /></a>
                 </div>
             {% endfor %}
         </div>
