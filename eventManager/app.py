@@ -16,11 +16,12 @@ from schema.event import ma
 app = Flask(__name__)
 api_bp = Blueprint('api', __name__)
 api = Api(api_bp)
-app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql://postgres:post123@localhost/event_service"
+app.config["SQLALCHEMY_DATABASE_URI"] = "postgresql+psycopg2://postgres:post123@localhost:5432/event_service"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = True
 app.config['JWT_TOKEN_LOCATION'] = ['cookies']
 app.config['JWT_COOKIE_CSRF_PROTECT'] = False  # TODO for testing
 app.config["SECRET_KEY"] = os.getenv('SECRET_KEY', 'my_precious')
+app.config["JWT_SESSION_COOKIE"] = 15*60  # 15 minutes
 db.init_app(app)
 ma.init_app(app)
 jwt.init_app(app)
@@ -41,4 +42,4 @@ with app.app_context():
     db.create_all()
 
 if __name__ == '__main__':
-    app.run(port=5000)
+    app.run(host="0.0.0.0", port=5000)

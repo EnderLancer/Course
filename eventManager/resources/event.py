@@ -9,7 +9,11 @@ from schema.event import EventListSchema, EventDetailSchema
 
 class EventList(Resource):
     def get(self):
-        result = Event.query.all()
+        if ("status" in request.args
+                and request.args.get("status") in EventStatusType.to_list()):
+            result = Event.query.filter(Event.status == request.args.get("status")).all()
+        else:
+            result = Event.query.all()
         return EventListSchema(many=True).dump(result)
 
     @jwt_required()

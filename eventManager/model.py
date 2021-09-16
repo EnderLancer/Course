@@ -7,8 +7,6 @@ from resources import jwt
 
 db = SQLAlchemy()
 
-JWT_SECRET_KEY = 'SECRET_KEY'  # TODO refactor this ugly solution
-
 
 class ListedEnum(Enum):
     @classmethod
@@ -117,7 +115,7 @@ class Event(db.Model):
     owner = db.relationship('User')
     title = db.Column(db.String(120), nullable=False)
     description = db.Column(db.String(1023), nullable=False)
-    start_datetime = db.Column(db.DateTime)
+    start_datetime = db.Column(db.DateTime, nullable=False)
     status = db.Column(db.Enum(EventStatusType), default=EventStatusType.NEW.name, nullable=False)
     guests = db.relationship('Guest', secondary=event_guest, lazy='subquery',
                              backref=db.backref('events', lazy=True))

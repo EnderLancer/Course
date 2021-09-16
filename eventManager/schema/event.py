@@ -1,4 +1,6 @@
-from marshmallow import fields
+from datetime import datetime
+
+from marshmallow import fields, validates, ValidationError
 from marshmallow import validate
 
 from model import Event, EventStatusType
@@ -12,11 +14,12 @@ class EventListSchema(ma.SQLAlchemySchema):
         model = Event
         load_instance = True
         include_fk = True
-        fields = ["id", "title", "status"]
+        fields = ["id", "title", "status", "start_datetime"]
 
     id = ma.auto_field()
     title = fields.Str(required=True, validate=[validate.Length(min=4, max=120)])
     status = fields.Str()
+    start_datetime = fields.DateTime(format='%Y-%m-%d %H:%M:%S')
 
 
 class EventDetailSchema(ma.SQLAlchemySchema):
@@ -24,7 +27,7 @@ class EventDetailSchema(ma.SQLAlchemySchema):
         model = Event
         load_instance = True
         include_fk = True
-        fields = ["id", "title", "owner_id", "description", "status", "artifacts", "guests"]
+        fields = ["id", "title", "owner_id", "description", "status", "artifacts", "guests", "start_datetime"]
 
     id = ma.auto_field()
     title = fields.Str(required=True, validate=[validate.Length(min=4, max=120)])
@@ -33,3 +36,10 @@ class EventDetailSchema(ma.SQLAlchemySchema):
     artifacts = ma.Nested(ArtifactSchema, many=True)
     guests = ma.Nested(GuestSchema, many=True)
     status = fields.Str(validate=[validate.OneOf(EventStatusType.to_list())])
+    start_datetime = fields.DateTime(format='%Y-%m-%d %H:%M:%S')
+
+    @validates('start_datetime')
+    def is_in_future(self, value):
+        now = datetime.now()
+        if value <= now:
+            raise ValidationError("Can't create event in the past!")

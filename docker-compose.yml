@@ -1,0 +1,25 @@
+version: "3.7"
+services:
+  db:
+    image: postgres:13
+    restart: always
+    volumes:
+      - db-data:/var/lib/postgresql
+    container_name: course_db
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: post123
+      POSTGRES_DB: event_service
+
+  event_service:
+    build: eventManager
+    restart: always
+    ports:
+      - "5000:5000"
+    depends_on:
+      - 'db'
+
+volumes:
+  db-data:
